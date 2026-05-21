@@ -1,0 +1,392 @@
+openapi: 3.0.4
+info:
+  title: Интернет-магазин
+  description: "REST API интернет-магазина, предоставляющее функционал управления товарами, корзиной покупок и оформлением заказов"
+  version: 1.0.1
+servers:
+- url: https://virtserver.swaggerhub.com/null-cc9/task_2/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: ProductController
+  description: Работа с товаром
+- name: CartController
+  description: Работа с корзиной
+- name: OrderController
+  description: Работа с заказами
+paths:
+  /products:
+    get:
+      tags:
+      - ProductController
+      summary: Получить все товары
+      operationId: getAllProducts
+      parameters:
+      - name: page
+        in: query
+        description: Номер страницы (начиная с 0)
+        required: false
+        schema:
+          type: integer
+          example: 0
+      - name: size
+        in: query
+        description: Количество элементов на странице
+        required: false
+        schema:
+          type: integer
+          example: 10
+      responses:
+        "200":
+          description: Страница товаров
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200"
+    post:
+      tags:
+      - ProductController
+      summary: Создать товар
+      operationId: createProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductCreate"
+        required: true
+      responses:
+        "200":
+          description: Товар создан
+  /products/{id}:
+    get:
+      tags:
+      - ProductController
+      summary: Получить товар по id
+      operationId: getProductById
+      parameters:
+      - name: id
+        in: path
+        description: ID уникального товара
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Товар найден
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: Товар не найден
+  /carts/{cartId}:
+    get:
+      tags:
+      - CartController
+      summary: Получить корзину по id
+      operationId: getCartById
+      parameters:
+      - name: cartId
+        in: path
+        description: ID уникальной корзины
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Корзина найдена
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+        "404":
+          description: Корзина не найдена
+  /carts/{cartId}/items:
+    post:
+      tags:
+      - CartController
+      summary: Добавить в конкретную корзину товар
+      operationId: addItemToCart
+      parameters:
+      - name: cartId
+        in: path
+        description: ID уникальной корзины
+        required: true
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CartItem"
+        required: true
+      responses:
+        "200":
+          description: Товар добавлен
+  /carts/{cartId}/items/{productId}:
+    delete:
+      tags:
+      - CartController
+      summary: Удалить товар из корзины
+      operationId: removeItemFromCart
+      parameters:
+      - name: cartId
+        in: path
+        description: ID уникальной корзины
+        required: true
+        schema:
+          type: integer
+      - name: productId
+        in: path
+        description: ID уникального товара
+        required: true
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: Товар удалён
+        "404":
+          description: Не найден товар или корзина
+  /orders:
+    get:
+      tags:
+      - OrderController
+      summary: Получить все заказы
+      operationId: getAllOrders
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          example: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          example: 10
+      responses:
+        "200":
+          description: Страница заказов
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/inline_response_200_1"
+    post:
+      tags:
+      - OrderController
+      summary: Создать заказ
+      operationId: createOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OrderCreate"
+        required: true
+      responses:
+        "201":
+          description: Заказ создан
+  /orders/{id}:
+    get:
+      tags:
+      - OrderController
+      summary: Получить заказ по id
+      operationId: getOrderById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Заказ найден
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "404":
+          description: Заказ не найден
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        productId:
+          type: integer
+          readOnly: true
+        name:
+          maxLength: 100
+          minLength: 1
+          type: string
+        specifications:
+          maxLength: 1000
+          minLength: 1
+          type: string
+          x-stoplight:
+            id: guqv8bp7ltjnh
+        price:
+          multipleOf: 0.01
+          maximum: 100000
+          minimum: 0
+          type: number
+    ProductCreate:
+      title: ProductCreate
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          minLength: 1
+          type: string
+        specifications:
+          maxLength: 1000
+          minLength: 1
+          type: string
+          x-stoplight:
+            id: vv0gf2k72zhxy
+        price:
+          multipleOf: 0.01
+          maximum: 100000
+          minimum: 0
+          type: number
+          x-stoplight:
+            id: w6ghhvu1d7loj
+    Cart:
+      title: Cart
+      type: object
+      properties:
+        cartId:
+          type: integer
+          readOnly: true
+        items:
+          maxItems: 1000
+          minItems: 0
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+    CartItem:
+      title: CartItem
+      type: object
+      properties:
+        productId:
+          type: integer
+        name:
+          maxLength: 100
+          minLength: 1
+          type: string
+          x-stoplight:
+            id: 1d6nzzuh3g5et
+        specifications:
+          maxLength: 1000
+          minLength: 1
+          type: string
+          x-stoplight:
+            id: 31p0kb4pr75qm
+        quantity:
+          maximum: 100
+          minimum: 1
+          type: integer
+    Order:
+      title: Order
+      type: object
+      properties:
+        orderId:
+          type: integer
+          readOnly: true
+        userId:
+          type: integer
+          x-stoplight:
+            id: 23ph04pik5rn6
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+          x-stoplight:
+            id: q0ydfr68tnvol
+        totalPrice:
+          multipleOf: 0.01
+          minimum: 1
+          type: number
+          readOnly: true
+          x-stoplight:
+            id: tby1lex4y5ly4
+        status:
+          type: string
+          enum:
+          - ожидает обработки
+          - оплачен
+          - отправлен
+          - доставлен
+          - отменён
+          x-stoplight:
+            id: 19imnvajqh80e
+    OrderCreate:
+      title: OrderCreate
+      type: object
+      properties:
+        cartId:
+          type: integer
+          description: "ID корзины, из которой создаётся заказ"
+    OrderItem:
+      title: OrderItem
+      type: object
+      properties:
+        productId:
+          type: integer
+        specifications:
+          type: string
+          x-stoplight:
+            id: fdj6tgmqiaat7
+        quantity:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          x-stoplight:
+            id: 21ex9rwe9tx51
+        price:
+          multipleOf: 0.01
+          minimum: 0
+          type: number
+          x-stoplight:
+            id: oq7yfej2syt02
+    OrderItemCreate:
+      title: OrderItemCreate
+      type: object
+      properties:
+        productId:
+          type: integer
+        quantity:
+          maximum: 1000
+          minimum: 1
+          type: integer
+          x-stoplight:
+            id: hxmqwhzz8cubd
+    inline_response_200:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+        totalElements:
+          type: integer
+          example: 100
+        totalPages:
+          type: integer
+          example: 10
+        currentPage:
+          type: integer
+          example: 0
+    inline_response_200_1:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/Order"
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        currentPage:
+          type: integer
