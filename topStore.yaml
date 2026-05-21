@@ -223,13 +223,12 @@ components:
           maxLength: 1000
           minLength: 1
           type: string
-          x-stoplight:
-            id: guqv8bp7ltjnh
         price:
           multipleOf: 0.01
           maximum: 100000
           minimum: 0
           type: number
+      description: "Описывает готовый товар, который хранится в системе и возвращается клиенту"
     ProductCreate:
       title: ProductCreate
       type: object
@@ -242,15 +241,12 @@ components:
           maxLength: 1000
           minLength: 1
           type: string
-          x-stoplight:
-            id: vv0gf2k72zhxy
         price:
           multipleOf: 0.01
           maximum: 100000
           minimum: 0
           type: number
-          x-stoplight:
-            id: w6ghhvu1d7loj
+      description: "Описывает данные, которые пользователь отправляет при создании нового товара"
     Cart:
       title: Cart
       type: object
@@ -264,6 +260,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/CartItem"
+      description: Описывает корзину покупателя
     CartItem:
       title: CartItem
       type: object
@@ -274,18 +271,15 @@ components:
           maxLength: 100
           minLength: 1
           type: string
-          x-stoplight:
-            id: 1d6nzzuh3g5et
         specifications:
           maxLength: 1000
           minLength: 1
           type: string
-          x-stoplight:
-            id: 31p0kb4pr75qm
         quantity:
           maximum: 100
           minimum: 1
           type: integer
+      description: Описывает один товар внутри корзины
     Order:
       title: Order
       type: object
@@ -295,21 +289,15 @@ components:
           readOnly: true
         userId:
           type: integer
-          x-stoplight:
-            id: 23ph04pik5rn6
         items:
           type: array
           items:
             $ref: "#/components/schemas/OrderItem"
-          x-stoplight:
-            id: q0ydfr68tnvol
         totalPrice:
           multipleOf: 0.01
           minimum: 1
           type: number
           readOnly: true
-          x-stoplight:
-            id: tby1lex4y5ly4
         status:
           type: string
           enum:
@@ -318,8 +306,7 @@ components:
           - отправлен
           - доставлен
           - отменён
-          x-stoplight:
-            id: 19imnvajqh80e
+      description: Описывает оформленный заказ
     OrderCreate:
       title: OrderCreate
       type: object
@@ -327,6 +314,7 @@ components:
         cartId:
           type: integer
           description: "ID корзины, из которой создаётся заказ"
+      description: Описывает данные для создания нового заказа
     OrderItem:
       title: OrderItem
       type: object
@@ -335,20 +323,15 @@ components:
           type: integer
         specifications:
           type: string
-          x-stoplight:
-            id: fdj6tgmqiaat7
         quantity:
           maximum: 1000
           minimum: 1
           type: integer
-          x-stoplight:
-            id: 21ex9rwe9tx51
         price:
           multipleOf: 0.01
           minimum: 0
           type: number
-          x-stoplight:
-            id: oq7yfej2syt02
+      description: Описывает один товар внутри заказа
     OrderItemCreate:
       title: OrderItemCreate
       type: object
@@ -359,8 +342,7 @@ components:
           maximum: 1000
           minimum: 1
           type: integer
-          x-stoplight:
-            id: hxmqwhzz8cubd
+      description: Описывает данные для добавления товара в заказ
     inline_response_200:
       type: object
       properties:
